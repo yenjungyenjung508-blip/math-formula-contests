@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="搜尋數學公式、中英文名稱、解題概念及數學競賽歷屆題目來源。">
+<title>數學競賽公式搜尋站</title>
+<style>
+:root{--bg:#f4f6fb;--paper:#fff;--ink:#1c2940;--muted:#66748a;--blue:#3156a6;--line:#dfe5ef;--green:#176a50;--amber:#855b12}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans TC",sans-serif;line-height:1.65}
+header{background:linear-gradient(135deg,#172b50,#3156a6);color:white;padding:32px 18px}
+.wrap{max-width:1050px;margin:auto}
+header h1{margin:0;font-size:clamp(27px,4vw,38px)}
+header p{max-width:760px;margin:10px 0 0;color:#e3eafa}
+main{max-width:1050px;margin:auto;padding:22px 15px 48px}
+.panel,.card{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:16px}
+h2{font-size:21px;margin:0 0 12px}
+h3{font-size:18px;margin:0 0 6px}
+label{display:block;font-size:14px;color:var(--muted);margin:0 0 6px}
+input,select,button{font:inherit;border-radius:9px}
+input,select{width:100%;padding:12px;border:1px solid #cbd4e2;background:white;color:var(--ink)}
+button{padding:11px 15px;border:0;background:var(--blue);color:white;cursor:pointer;font-weight:600}
+button:hover{filter:brightness(1.08)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #91b7ff;outline-offset:2px}
+.searchrow{display:grid;grid-template-columns:1fr auto;gap:9px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{background:#edf2ff;color:#24478f;border:1px solid #d5e0ff;padding:7px 12px;border-radius:20px}
+#status{color:var(--muted);margin:18px 3px;font-size:14px}
+.formula{font-size:23px;font-family:"Cambria Math","Times New Roman",serif;background:#f3f6fc;padding:12px;border-radius:9px;overflow-wrap:anywhere}
+.meta{font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-size:12px;border-radius:6px;padding:3px 8px;margin:3px 5px 3px 0;background:#edf2ff;color:#24478f}
+.badge{display:inline-block;font-size:12px;padding:4px 8px;border-radius:6px;background:#fff2d8;color:var(--amber)}
+.badge.good{background:#e1f5eb;color:var(--green)}
+.card p{margin:8px 0}
+.card ul{padding-left:21px}
+.links{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.links a{display:inline-block;padding:9px 12px;background:#edf2ff;border-radius:8px;color:#24478f;text-decoration:none}
+.links a:hover{text-decoration:underline}
+.note{background:#fff8e9;border:1px solid #f0dfb5;border-radius:10px;padding:12px;font-size:14px}
+.small{font-size:13px;color:var(--muted)}
+.empty{padding:20px;border:1px dashed #cbd4e2;border-radius:12px;color:var(--muted);background:white}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:20px}
+@media(max-width:600px){.filters{grid-template-columns:1fr}.searchrow{grid-template-columns:1fr}.panel,.card{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<h1>數學競賽公式搜尋站</h1>
+<p>Math Formula & Olympiad Problem Explorer<br>
+從公式出發，探索數學概念、競賽題目線索與歷屆試題來源。</p>
+</div>
+</header>
+
+<main>
+<section class="panel">
+<h2>搜尋公式</h2>
+<label for="query">輸入公式名稱、數學符號、英文或關鍵字</label>
+<div class="searchrow">
+<input id="query" placeholder="例如：柯西不等式、Cauchy、a²+b²=c²、geometry">
+<button id="searchBtn">搜尋</button>
+</div>
+<div class="filters">
+<div>
+<label for="category">公式分類</label>
+<select id="category">
+<option value="all">全部分類</option>
+<option value="algebra">代數 Algebra</option>
+<option value="number">數論 Number Theory</option>
+<option value="geometry">幾何 Geometry</option>
+<option value="combinatorics">組合 Combinatorics</option>
+<option value="sequence">數列與級數 Sequences</option>
+</select>
+</div>
+<div>
+<label for="level">學習程度</label>
+<select id="level">
+<option value="all">全部程度</option>
+<option value="junior">國中及基礎</option>
+<option value="senior">高中競賽</option>
+<option value="advanced">進階競賽</option>
+</select>
+</div>
+</div>
+<div class="chips">
+<button class="chip" data-q="Pythagorean">畢氏定理</button>
+<button class="chip" data-q="Cauchy">柯西不等式</button>
+<button class="chip" data-q="AM-GM">算術幾何平均</button>
+<button class="chip" data-q="quadratic">二次方程式</button>
+<button class="chip" data-q="modular">同餘</button>
+<button class="chip" data-q="binomial">二項式定理</button>
+</div>
+<p class="small">可使用中文、英文、公式名稱或符號搜尋。搜尋結果來自本網站內建的公式索引，不代表已完整檢索所有競賽題目。</p>
+</section>
+
+<section class="panel">
+<h2>題目查證標記說明</h2>
+<p><span class="badge good">已查證題目</span> 只有在已核對原始題目、競賽年份、題號及公式實際用途後，才應使用此標記。</p>
+<p><span class="badge">推測相關／待核實</span> 代表該公式可能適用於某類題型，尚未證實某一道歷屆題目確實使用它。</p>
+<div class="note">目前版本不預先宣稱任何特定歷屆題號已使用某公式。請透過每筆公式的官方試題來源連結自行核對；內建的「題型線索」屬學習提示，不是歷屆題目配對證據。</div>
+</section>
+
+<div id="status" aria-live="polite">正在顯示所有內建公式。</div>
+<div id="results"></div>
+
+<section class="panel">
+<h2>國內外競賽與官方來源</h2>
+<p class="small">以下連結用於查找原始題目與競賽資訊。網站不會假裝已經從這些來源自動下載或逐題分析全部試題。</p>
+<div class="links">
+<a href="https://www.imo-official.com/problems.aspx" target="_blank" rel="noopener noreferrer">IMO 國際數學奧林匹亞歷屆題目 ↗</a>
+<a href="https://tpmso.k12ea.gov.tw/tmo/" target="_blank" rel="noopener noreferrer">臺灣數學奧林匹亞辦公室 ↗</a>
+<a href="https://www.imo-official.com/" target="_blank" rel="noopener noreferrer">IMO 官方網站 ↗</a>
+</div>
+<h3 style="margin-top:18px">以公式關鍵字尋找公開題目線索</h3>
+<p class="small">下列搜尋會在網路搜尋頁面開啟。搜尋結果只是線索，仍需點進原始題目核對。</p>
+<div class="links">
+<a id="webSearch" href="https://www.google.com/search?q=mathematics+olympiad+formula+problems" target="_blank" rel="noopener noreferrer">搜尋目前關鍵字 ↗</a>
+<a id="imoSearch" href="https://www.google.com/search?q=site%3Aimo-official.com%2Fproblems+math+problem" target="_blank" rel="noopener noreferrer">搜尋 IMO 官方題目頁 ↗</a>
+</div>
+</section>
+
+<section class="panel">
+<h2>如何把新題目加入索引？</h2>
+<ol>
+<li>先在官方網站找到原始試題。</li>
+<li>記錄完整競賽名稱、年份、題號與原始網址。</li>
+<li>確認題目本身確實使用了該公式，而不只是出現相似的符號。</li>
+<li>再把題目新增到程式的資料清單，標記為「已查證」，並寫下核對依據。</li>
+</ol>
+<p class="small">第一版使用純前端資料，搜尋只會查詢此 HTML 內的索引；不會自動更新所有競賽的最新試題。</p>
+</section>
+</main>
+<footer>數學競賽公式搜尋站 · Math Formula & Olympiad Problem Explorer</footer>
+
+<script>
+const formulas = [
+{
+id:"pythagorean", name:"畢氏定理", en:"Pythagorean Theorem",
+formula:"a² + b² = c²",
+cat:"geometry", level:"junior",
+keywords:"直角三角形 斜邊 勾股 theorem right triangle hypotenuse",
+meaning:"在直角三角形中，兩股長的平方和等於斜邊長的平方。",
+use:"求直角三角形邊長、距離、座標幾何與幾何構造。",
+clue:"直角三角形、整數邊長、距離與幾何證明。",
+caveat:"此處是題型線索，未對應到已核實的特定競賽題號。"
+},
+{
+id:"quadratic", name:"二次方程式公式", en:"Quadratic Formula",
+formula:"x = (-b ± √(b² - 4ac)) / (2a)",
+cat:"algebra", level:"junior",
+keywords:"二次方程式 判別式 根 quadratic equation discriminant roots",
+meaning:"對 ax² + bx + c = 0 且 a ≠ 0，公式給出方程式的根。",
+use:"求根、分析根的個數、討論參數與判別式。",
+clue:"參數方程、整數根、根的範圍與判別式。",
+caveat:"題目是否需要此公式，必須依原題解法判定。"
+},
+{
+id:"amgm", name:"算術平均數－幾何平均數不等式", en:"AM-GM Inequality",
+formula:"(a + b) / 2 ≥ √(ab)  (a,b ≥ 0)",
+cat:"algebra", level:"senior",
+keywords:"AM GM inequality arithmetic geometric mean 不等式 最值 最小 最大",
+meaning:"非負數的算術平均數不小於幾何平均數；等號在 a = b 時成立。",
+use:"不等式證明、求最值與估計正數乘積或和。",
+clue:"正數和與積的關係、對稱式、極值問題。",
+caveat:"競賽題常有其他證法；不能只因適用就認定它是標準解法。"
+},
+{
+id:"cauchy", name:"柯西－施瓦茨不等式", en:"Cauchy–Schwarz Inequality",
+formula:"(a₁² + ⋯ + aₙ²)(b₁² + ⋯ + bₙ²) ≥ (a₁b₁ + ⋯ + aₙbₙ)²",
+cat:"algebra", level:"advanced",
+keywords:"Cauchy Schwarz CS inequality 柯西施瓦茨 向量 內積 不等式",
+meaning:"向量內積的平方不超過兩向量長度平方的乘積。",
+use:"不等式證明、向量問題、估計和式與最值。",
+clue:"平方和與乘積和同時出現的問題。",
+caveat:"需核對題目條件與等號成立條件。"
+},
+{
+id:"binomial", name:"二項式定理", en:"Binomial Theorem",
+formula:"(x + y)ⁿ = Σₖ₌₀ⁿ C(n,k)xⁿ⁻ᵏyᵏ",
+cat:"combinatorics", level:"senior",
+keywords:"binomial theorem 二項式係數 組合 數項 展開 Pascal",
+meaning:"正整數次方的二項式展開，各項係數為組合數。",
+use:"代數展開、係數問題、組合計數與整數性質。",
+clue:"展開式中特定項的係數、係數總和與組合計數。",
+caveat:"若涉及特殊係數或同餘，仍須依題目完整推導。"
+},
+{
+id:"arithmetic", name:"等差數列通項與求和", en:"Arithmetic Sequence and Series",
+formula:"aₙ = a₁ + (n−1)d； Sₙ = n(a₁ + aₙ)/2",
+cat:"sequence", level:"junior",
+keywords:"等差數列 等差級數 arithmetic sequence series common difference sum",
+meaning:"相鄰兩項差固定為 d；前 n 項和等於項數乘首末項平均。",
+use:"規律、求和、整數序列與遞迴型問題。",
+clue:"固定差、連續整數求和、數列規律。",
+caveat:"先確認數列確實為等差數列。"
+},
+{
+id:"geometric", name:"等比數列求和", en:"Geometric Series",
+formula:"Sₙ = a₁(1 − rⁿ)/(1 − r),  r ≠ 1",
+cat:"sequence", level:"junior",
+keywords:"等比數列 等比級數 geometric series common ratio",
+meaning:"首項為 a₁、公比為 r 的等比數列，其前 n 項和可由此公式計算。",
+use:"比例變化、遞推、幾何級數與部分計數問題。",
+clue:"相鄰項比值固定、倍增或縮減的數列。",
+caveat:"r = 1 時須另行處理。"
+},
+{
+id:"euclid", name:"歐幾里得算法", en:"Euclidean Algorithm",
+formula:"gcd(a,b) = gcd(b, a mod b)",
+cat:"number", level:"junior",
+keywords:"最大公因數 gcd 餘數 同餘 euclidean algorithm divisibility",
+meaning:"兩整數的最大公因數等於較小數與除法餘數的最大公因數。",
+use:"最大公因數、整除性、互質與數論證明。",
+clue:"整數除法、餘數遞推與最大公因數。",
+caveat:"需注意各步驟的整數條件與終止情況。"
+},
+{
+id:"modular", name:"同餘的基本運算", en:"Modular Arithmetic",
+formula:"a ≡ b (mod m)  ⇔  m | (a − b)",
+cat:"number", level:"senior",
+keywords:"同餘 modular arithmetic congruence 餘數 整除 模運算",
+meaning:"a 與 b 對模 m 同餘，表示 m 整除 a−b。",
+use:"整數性質、餘數循環、末位數與數論證明。",
+clue:"餘數、週期、整數次方及整除性問題。",
+caveat:"模數與乘法消去等操作需要符合相應條件。"
+},
+{
+id:"cosine", name:"餘弦定理", en:"Law of Cosines",
+formula:"c² = a² + b² − 2ab cos C",
+cat:"geometry", level:"senior",
+keywords:"餘弦定理 cosine law triangle 三角形 邊角",
+meaning:"三角形中，任一邊長的平方等於另外兩邊平方和減去兩倍邊長乘積與夾角餘弦的乘積。",
+use:"已知兩邊夾角求第三邊，或由三邊求角。",
+clue:"非直角三角形、邊角關係與幾何計算。",
+caveat:"確認角 C 與其對邊 c 的對應關係。"
+},
+{
+id:"sine", name:"正弦定理", en:"Law of Sines",
+formula:"a / sin A = b / sin B = c / sin C",
+cat:"geometry", level:"senior",
+keywords:"正弦定理 sine law triangle 三角形 邊角",
+meaning:"三角形各邊長與其對角正弦的比值相等。",
+use:"三角形邊角計算、幾何證明與三角測量。",
+clue:"已知一組邊角，求其他邊或角的問題。",
+caveat:"已知兩邊和非夾角時，可能需要討論多種情況。"
+},
+{
+id:"inclusion", name:"容斥原理", en:"Inclusion–Exclusion Principle",
+formula:"|A ∪ B| = |A| + |B| − |A ∩ B|",
+cat:"combinatorics", level:"senior",
+keywords:"容斥原理 inclusion exclusion counting 集合 重複計數",
+meaning:"計算兩集合聯集時，先加兩集合大小，再扣掉重複計算的交集。",
+use:"計數、整除條件、集合重疊與避免重複計數。",
+clue:"多種條件交疊、同時符合多個條件的計數問題。",
+caveat:"多於兩個集合時，還需要加入更高階交集項。"
+},
+{
+id:"euler", name:"歐拉多面體公式", en:"Euler's Polyhedron Formula",
+formula:"V − E + F = 2",
+cat:"geometry", level:"advanced",
+keywords:"Euler polyhedron vertices edges faces 多面體 頂點 邊 面",
+meaning:"對凸多面體，頂點數 V、邊數 E 與面數 F 滿足此關係。",
+use:"多面體計數與幾何結構問題。",
+clue:"多面體的頂點、邊、面數量關係。",
+caveat:"公式的適用條件不可任意擴張到所有幾何結構。"
+},
+{
+id:"pigeonhole", name:"鴿籠原理", en:"Pigeonhole Principle",
+formula:"若 N 個物件放入 k 個盒子，至少一盒有 ⌈N/k⌉ 個物件",
+cat:"combinatorics", level:"junior",
+keywords:"鴿籠原理 pigeonhole principle 抽屜原理 存在性 計數",
+meaning:"物件數量相對於盒子數量足夠多時，至少有一個盒子包含一定數量的物件。",
+use:"存在性證明、整數餘數、點集與組合問題。",
+clue:"證明至少兩個物件具有相同性質，或某一類物件必定存在。",
+caveat:"必須清楚定義物件與分類的盒子。"
+},
+{
+id:"factor", name:"平方差公式", en:"Difference of Squares",
+formula:"a² − b² = (a − b)(a + b)",
+cat:"algebra", level:"junior",
+keywords:"平方差 因式分解 difference of squares factoring",
+meaning:"兩個平方的差可以分解為和與差的乘積。",
+use:"因式分解、整數乘積、代數化簡與數論。",
+clue:"平方數相減、整除性與乘積形式。",
+caveat:"辨識式子結構後再使用，不能直接套用於任意兩項。"
+},
+{
+id:"pythagorean-trig", name:"基本三角恆等式", en:"Pythagorean Trigonometric Identity",
+formula:"sin² θ + cos² θ = 1",
+cat:"geometry", level:"senior",
+keywords:"三角恆等式 trigonometric identity sine cosine",
+meaning:"對任意實數角 θ，正弦平方與餘弦平方之和等於 1。",
+use:"三角式化簡、角度關係與三角不等式。",
+clue:"同時出現 sin² 與 cos² 的代數或幾何問題。",
+caveat:"此式不會單獨決定角度，通常需要其他條件。"
+}
+];
+
+const categoryNames={
+algebra:"代數 Algebra",number:"數論 Number Theory",
+geometry:"幾何 Geometry",combinatorics:"組合 Combinatorics",
+sequence:"數列與級數 Sequences"
+};
+const levelNames={junior:"國中及基礎",senior:"高中競賽",advanced:"進階競賽"};
+
+function esc(s){
+return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function render(){
+const q=document.getElementById("query").value.trim().toLowerCase();
+const cat=document.getElementById("category").value;
+const lev=document.getElementById("level").value;
+const words=q.split(/\s+/).filter(Boolean);
+const found=formulas.filter(f=>{
+const hay=[f.name,f.en,f.formula,f.keywords,f.meaning,f.use,f.clue,categoryNames[f.cat],levelNames[f.level]].join(" ").toLowerCase();
+return (!words.length||words.every(w=>hay.includes(w)))&&(cat==="all"||f.cat===cat)&&(lev==="all"||f.level===lev);
+});
+document.getElementById("status").textContent="找到 "+found.length+" 個公式。每筆公式均為學習索引；目前沒有預先標記為已核實的特定歷屆題目配對。";
+const results=document.getElementById("results");
+if(!found.length){
+results.innerHTML='<div class="empty">沒有符合的公式。試試英文名稱、較短關鍵字，或把分類改為「全部分類」。</div>';
+}else{
+results.innerHTML=found.map(f=>`
+<article class="card">
+<div class="meta">${esc(categoryNames[f.cat])} · ${esc(levelNames[f.level])}</div>
+<h3 style="margin-top:5px">${esc(f.name)}</h3>
+<p>${esc(f.en)}</p>
+<div class="formula">${esc(f.formula)}</div>
+<p><b>公式概念：</b>${esc(f.meaning)}</p>
+<p><b>常見用途：</b>${esc(f.use)}</p>
+<p><b>題型線索：</b>${esc(f.clue)}</p>
+<p class="small">${esc(f.caveat)}</p>
+<div><span class="badge">推測相關／待核實</span></div>
+<p class="small">題目配對狀態：尚未核實特定競賽年份與題號。請勿將此公式卡視為歷屆題目證據。</p>
+<div class="links">
+<a href="${"https://www.google.com/search?q="+encodeURIComponent('"'+f.name+'" mathematics olympiad problem')}" target="_blank" rel="noopener noreferrer">搜尋相關競賽題目 ↗</a>
+<a href="${"https://www.google.com/search?q="+encodeURIComponent('site:imo-official.com/problems "'+f.en+'"')}" target="_blank" rel="noopener noreferrer">查找 IMO 官方題目線索 ↗</a>
+</div>
+</article>`).join("");
+}
+const webq=q||"mathematics olympiad formula problems";
+document.getElementById("webSearch").href="https://www.google.com/search?q="+encodeURIComponent(webq+" mathematics contest problem");
+document.getElementById("imoSearch").href="https://www.google.com/search?q="+encodeURIComponent("site:imo-official.com/problems "+webq);
+}
+document.getElementById("searchBtn").addEventListener("click",render);
+document.getElementById("query").addEventListener("keydown",e=>{if(e.key==="Enter")render();});
+document.getElementById("category").addEventListener("change",render);
+document.getElementById("level").addEventListener("change",render);
+document.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>{
+document.getElementById("query").value=b.dataset.q;
+document.getElementById("category").value="all";
+render();
+}));
+render();
+</script>
+</body>
+</html>
